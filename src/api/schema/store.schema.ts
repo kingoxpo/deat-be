@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 @Schema({ collection: 'mem' })
 export class Store extends Document {
@@ -20,6 +20,9 @@ export class Store extends Document {
 
   @Prop()
   htel: string;
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Menu' }] })
+  menus: Types.ObjectId[];
 }
 
 export const StoreSchema = SchemaFactory.createForClass(Store);

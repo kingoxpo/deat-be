@@ -1,16 +1,14 @@
 import { Controller, Get, Post, Put, Param, Body, Query } from '@nestjs/common';
 import { StoreService } from '../../service/store.service';
-import { Store } from 'src/api/service/store.schema';
 import { CreateStoreDto } from './store.dto';
+import { Store } from 'src/api/schema/store.schema';
 
 @Controller('app/stores')
 export class StoreController {
   constructor(private readonly storeService: StoreService) {}
 
   @Get()
-  async getStores(@Query('category') category: number): Promise<Store[]> {
-    console.log('안들어오나?');
-
+  async getStores(@Query('category') category?: number): Promise<Store[]> {
     return this.storeService.getStores(category);
   }
 
