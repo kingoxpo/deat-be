@@ -31,6 +31,13 @@ export class StoreController {
     return this.storeService.updateStore(id, updateStoreDto);
   }
 
+  @Post('login')
+  async login(
+    @Body() body: { email: string; password: string },
+  ): Promise<{ success: boolean }> {
+    return await this.userService.login(body);
+  }
+
   /**
    * 인증토큰 발행
    */

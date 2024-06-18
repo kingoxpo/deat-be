@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import * as crypto from 'crypto';
+import * as bcrypt from 'bcrypt';
 import { User } from './user.schema';
+import { JwtService } from '../../common/jwt/jwt.service';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async signUp(data: {
     email: string;
@@ -20,21 +24,43 @@ export class UserService {
         return { success: false, message: 'Email already exists' };
       }
 
-      const hashedPassword = crypto
-        .createHash('sha256')
-        .update(crypto.createHash('md5').update(data.password).digest('hex'))
-        .digest('hex');
+      const hashedPassword = await bcrypt.hash(data.password, 10);
       const newMember = new this.userModel({
         email: data.email,
         password: hashedPassword,
-        combine_yn: true,
       });
 
       await newMember.save();
 
       return { success: true };
     } catch (error) {
+      console.error(error); // 에러 로깅
       return { success: false, message: 'An error occurred during sign up' };
     }
+  }
+
+  async login(data: {
+    email: string;
+    password: string;
+  }): Promise<{ success: boolean; m_no?: number; token?: string }> {
+    const user = await this.userModel.findOne({ email: data.email }).exec();
+
+    if (!user) {
+      return { success: false };
+    }
+
+    const passwordMatch = await bcrypt.compare(data.password, user.password);
+    if (!passwordMatch) {
+      return { success: false };
+    }
+
+    const token = await this.jwtService.sign({
+      email: user.email,
+    });
+
+    return {
+      success: true,
+      token: token,
+    };
   }
 }
