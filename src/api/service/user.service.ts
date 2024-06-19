@@ -42,7 +42,9 @@ export class UserService {
   async login(data: {
     email: string;
     password: string;
-  }): Promise<{ success: boolean; m_no?: number; token?: string }> {
+  }): Promise<{ success: boolean; token?: string }> {
+    console.log(data, '--data-');
+
     const user = await this.userModel.findOne({ email: data.email }).exec();
 
     if (!user) {
@@ -54,9 +56,7 @@ export class UserService {
       return { success: false };
     }
 
-    const token = await this.jwtService.sign({
-      email: user.email,
-    });
+    const token = await this.jwtService.sign({ email: user.email });
 
     return {
       success: true,

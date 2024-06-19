@@ -31,13 +31,12 @@ export class StoreController {
     return this.storeService.updateStore(id, updateStoreDto);
   }
 
-  @Post('login')
+  @Get('login')
   async login(
-    @Body() body: { email: string; password: string },
-  ): Promise<{ success: boolean }> {
-    return await this.userService.login(body);
+    @Query() params: { email: string; password: string },
+  ): Promise<{ success: boolean; token?: string }> {
+    return await this.userService.login(params);
   }
-
   /**
    * 인증토큰 발행
    */
