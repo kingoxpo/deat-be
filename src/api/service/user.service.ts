@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { User } from './user.schema';
 import { JwtService } from '../../common/jwt/jwt.service';
+import { LoginResponse } from '../app/user/entities/user.entitiy';
 
 @Injectable()
 export class UserService {
@@ -42,9 +43,7 @@ export class UserService {
   async login(data: {
     email: string;
     password: string;
-  }): Promise<{ success: boolean; token?: string }> {
-    console.log(data, '--data-');
-
+  }): Promise<LoginResponse> {
     const user = await this.userModel.findOne({ email: data.email }).exec();
 
     if (!user) {
@@ -62,5 +61,10 @@ export class UserService {
       success: true,
       token: token,
     };
+  }
+
+  async findAll() {
+    //로직 추가 예정
+    return;
   }
 }

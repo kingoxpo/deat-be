@@ -6,6 +6,9 @@ import { CoreModule } from './api/app/app.module';
 import * as dotenv from 'dotenv';
 import { JwtModule } from './common/jwt/jwt.module';
 import { ConfigModule } from '@nestjs/config';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { GraphQLModule } from '@nestjs/graphql';
+import { join } from 'path';
 
 dotenv.config();
 
@@ -14,6 +17,11 @@ dotenv.config();
     ConfigModule.forRoot({ isGlobal: true }), // ConfigModule 설정
     MongooseModule.forRoot(process.env.MONGO_URI, {
       dbName: 'deat',
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      path: '/graphql',
     }),
     CoreModule,
     JwtModule.forRoot(),
