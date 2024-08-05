@@ -13,8 +13,6 @@ export class StoreController {
 
   @Get()
   async getStores(@Query('category') category: number): Promise<Store[]> {
-    console.log('안들어오나?');
-
     return this.storeService.getStores(category);
   }
 

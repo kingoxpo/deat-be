@@ -22,7 +22,6 @@ export class UserController {
     return await this.userService.login(params);
   }
 
-  
   /**
    * 인증토큰 발행 (REST API 방식)
    */

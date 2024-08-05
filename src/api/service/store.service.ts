@@ -3,16 +3,24 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Store } from './store.schema';
 import { CreateStoreDto } from '../app/store/store.dto';
+import { MysqlService } from '../../libs/mysql/mysql.service';
 
 @Injectable()
 export class StoreService {
-  constructor(@InjectModel(Store.name) private storeModel: Model<Store>) {}
+  constructor(
+    @InjectModel(Store.name) private storeModel: Model<Store>,
+    private db: MysqlService,
+  ) {}
 
   async getStores(category: number): Promise<Store[]> {
-    console.log('Querying category:', +category);
-    const stores = await this.storeModel.find({ cate: +category }).exec();
-    console.log('Fetched stores:', stores); // 콘솔에 출력
-    return stores;
+    // Example of using MysqlService
+    // const prod = await this.db.query('SELECT * FROM prod WHERE prod_no = ?', [
+    //   category,
+    // ]);
+    //
+    // console.log('Prod from MySQL:', prod);
+
+    return await this.storeModel.find({ cate: +category }).exec();
   }
 
   async createStore(createStoreDto: CreateStoreDto): Promise<Store> {
