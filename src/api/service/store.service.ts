@@ -14,7 +14,7 @@ export class StoreService {
 
   async getStores(category: number): Promise<Store[]> {
     // Example of using MysqlService
-    // const prod = await this.db.query('SELECT * FROM prod WHERE prod_no = ?', [
+    // const prod = await this.db.ecf.query('SELECT * FROM prod WHERE prod_no = ?', [
     //   category,
     // ]);
     //

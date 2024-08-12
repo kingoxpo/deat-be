@@ -7,6 +7,8 @@ import { UserService } from './user.service';
 import { JwtService } from 'src/common/jwt/jwt.service';
 import { User, UserSchema } from './user.schema';
 import { AuthService } from './auth/auth.service';
+import { ProductService } from './prod/prod.service';
+import { ExcelService } from './excel/excel.service';
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { AuthService } from './auth/auth.service';
     MongooseModule.forFeature([{ name: Store.name, schema: StoreSchema }]),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
-  providers: [JwtService, StoreService, UserService, AuthService],
-  exports: [StoreService, UserService, AuthService],
+  providers: [JwtService, StoreService, UserService, AuthService, ProductService, ExcelService],
+  exports: [StoreService, UserService, AuthService, ProductService, ExcelService],
 })
 export class ServiceModule {}

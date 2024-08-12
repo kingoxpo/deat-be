@@ -5,13 +5,15 @@ import * as bcrypt from 'bcrypt';
 import { User } from './user.schema';
 import { JwtService } from '../../common/jwt/jwt.service';
 import { LoginResponse } from '../app/user/entities/user.entitiy';
+import { MysqlService } from 'src/libs/mysql/mysql.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     private readonly jwtService: JwtService,
-  ) {}
+    private db: MysqlService,
+  ) { }
 
   async signUp(data: {
     email: string;
@@ -44,6 +46,14 @@ export class UserService {
     email: string;
     password: string;
   }): Promise<LoginResponse> {
+
+    const allMem = await this.db.ecf.query('SELECT * FROM mem');
+    console.log(allMem, '--allMem--');
+    const mem = await this.db.ecf.query('SELECT * FROM mem WHERE m_no = ?', [1]);
+    
+    console.log('mem from MySQL:', mem);
+
+
     const user = await this.userModel.findOne({ email: data.email }).exec();
 
     if (!user) {

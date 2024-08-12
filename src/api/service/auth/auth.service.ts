@@ -4,6 +4,9 @@ import { sendUrl } from 'src/modules/request';
 
 @Injectable()
 export class AuthService {
+  private accessToken: string | null = null; // 액세스 토큰을 저장하기 위한 변수
+  private refreshToken: string | null = null; // 액세스 토큰을 저장하기 위한 변수
+
   async getCafe24Token(code: string): Promise<any> {
     const clientId = process.env.CAFE24_CLIENT_ID;
     const clientSecret = process.env.CAFE24_CLIENT_SECRET;
@@ -23,7 +26,12 @@ export class AuthService {
 
     try {
       const re = await sendUrl('POST', `https://${mallId}.cafe24api.com/api/v2/oauth/token`, payload, header);
-      return JSON.parse(re);
+      const response = JSON.parse(re);
+      this.accessToken = response.access_token;
+      this.refreshToken = response.refresh_token;
+
+
+      return response;
     } catch (error) {
       console.error(
         'Failed to fetch access token:',
@@ -34,5 +42,15 @@ export class AuthService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  // 액세스 토큰 반환 메소드
+  getStoredAccessToken(): string | null {
+    return this.accessToken;
+  }
+
+  // 리프레시 토큰 반환 메소드
+  getStoredRefreshToken(): string | null {
+    return this.refreshToken;
   }
 }

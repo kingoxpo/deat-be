@@ -10,12 +10,15 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { MysqlModule } from './libs/mysql/mysql.module';
+import configuration from './config/configuration';
 
 dotenv.config();
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }), // ConfigModule 설정
+    ConfigModule.forRoot({
+      load: [configuration],
+      isGlobal: true }), // ConfigModule 설정
     MongooseModule.forRoot(process.env.MONGO_URI, {
       dbName: 'deat',
     }),

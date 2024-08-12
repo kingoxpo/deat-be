@@ -5,7 +5,7 @@ import { AuthService } from '../../service/auth/auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('cafe24Token')
+  @Post('cafe24-token')
   async getToken(@Body('code') code: string) {
     return await this.authService.getCafe24Token(code);
   }
